@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>StarL online editor</title>
+    <meta name="author" content="Fabian Jakobs">
+
+    <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+    <script async="true" src="https://use.edgefonts.net/source-code-pro.js"></script>
+
+    <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
+
+</head>
+<body>
+
+<div id="optionsPanel" style="position:absolute;height:100%;width:600px">
+ 
+  <div style="position: absolute; overflow: hidden; top:10px; bottom:0">
+  <div style="width: 600px; height:100%; overflow-y: scroll ">
+
+  <table id="controls">
+    <tr>
+      <td>
+        <label for="doc">Document</label>
+      </td><td>
+        <select id="doc" size="1">
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <label for="mode">Mode</label>
+      </td><td>
+        <select id="mode" size="1">
+        </select>
+      </td>
+    </tr>
+    
+    <tr>
+      <td >
+        <label for="theme">Theme</label>
+      </td><td>
+        <select id="theme" size="1">
+          
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="fontsize">Font Size</label>
+      </td><td>
+        <select id="fontsize" size="1">
+          <option value="10px">10px</option>
+          <option value="11px">11px</option>
+          <option value="12px" selected="selected">12px</option>
+          <option value="13px">13px</option>
+          <option value="14px">14px</option>
+          <option value="16px">16px</option>
+          <option value="18px">18px</option>
+          <option value="20px">20px</option>
+          <option value="24px">24px</option>
+        </select>
+      </td>
+    </tr>
+  
+    <tr>
+      <td >
+        <label for="keybinding">Key Binding</label>
+      </td><td>
+        <select id="keybinding" size="1">
+          <option value="ace">Ace</option>
+          <option value="vim">Vim</option>
+          <option value="emacs">Emacs</option>
+          <option value="custom">Custom</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <input id="command" name="command" type="text">  <br>
+        <input type="button" value="echo" onclick="echoTerminal();" >
+      </td>
+    </tr>
+      <tr>
+      <td colspan="4">
+        <input type="button" value="saveFile" onclick="saveFile();">
+      </td>
+    </tr>
+ <tr>
+      <td colspan="4">
+        <input id="filepath" name="filepath" type="text">  <br>
+        <input type="button" value="saveTo" onclick="saveTo();" >
+      </td>
+    </tr>
+
+   
+     <tr>
+      <td >
+
+    <div id="status"></div>
+          </td>
+    </tr>
+    </table>
+    
+  
+  </div>
+  </div>
+</div>
+  <div id="editor-container"></div>
+
+
+
+
+  <script src="src/ace.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
+  <script src="src/keybinding-vim.js"></script>
+  <script src="src/keybinding-emacs.js"></script>
+  <script src="demo/kitchen-sink/demo.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    require("kitchen-sink/demo");
+
+
+function saveFile(){
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "my_parse_file.php";
+    var fn = env.editor.getSession().getValue();
+    var vars = "contents="+fn;
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+	    if(hr.readyState == 4 && hr.status == 200) {
+		    var return_data = hr.responseText;
+			document.getElementById("status").innerHTML = return_data;
+	    }
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(vars); // Actually execute the request
+    document.getElementById("status").innerHTML = "processing...";
+}
+
+function echoTerminal(){
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "echo.php";
+    var fn = document.getElementById("command").value;;
+    var vars = "action="+fn;
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+	    if(hr.readyState == 4 && hr.status == 200) {
+		    var return_data = hr.responseText;
+			document.getElementById("status").innerHTML = return_data;
+	    }
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(vars); // Actually execute the request
+    document.getElementById("status").innerHTML = "processing...";
+} 
+
+function saveTo(){
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "saveTo.php";
+    var fn = document.getElementById("filepath").value;
+    var ln = env.editor.getSession().getValue();
+    var vars = "path="+fn+"&contents="+ln;
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+	    if(hr.readyState == 4 && hr.status == 200) {
+		    var return_data = hr.responseText;
+			document.getElementById("status").innerHTML = return_data;
+	    }
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(vars); // Actually execute the request
+    document.getElementById("status").innerHTML = "processing...";
+} 
+
+  </script>
+
+
+</body>
+</html>
+
