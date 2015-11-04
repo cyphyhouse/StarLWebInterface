@@ -10,9 +10,26 @@
     <script async="true" src="https://use.edgefonts.net/source-code-pro.js"></script>
 
     <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
-
+    <style>
+    body {background-color:lightblue}
+    h1 { 
+        color: white;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 100; 
+    }
+    h2 { 
+        color: black;
+        font-family:  'Josefin Sans', sans-serif;
+        font-weight: 300; 
+    }
+    h3 { 
+        font-family: 'Exo', sans-serif;
+        font-weight: 300; 
+    }
+    </style>
 </head>
 <body>
+<h1>StarL onLine</h1>
 
 <div id="optionsPanel" style="position:absolute;height:100%;width:600px">
  
@@ -22,91 +39,72 @@
   <table id="controls">
     <tr>
       <td>
+        <p hidden>
         <label for="doc">Document</label>
+        </p>
       </td><td>
+        <p hidden>
         <select id="doc" size="1">
         </select>
+        </p>
       </td>
     </tr>
     <tr>
       <td >
+        <p hidden>
         <label for="mode">Mode</label>
+        </p>
       </td><td>
+        <p hidden>
         <select id="mode" size="1">
+        </p>
         </select>
       </td>
     </tr>
     
     <tr>
       <td >
+        <p hidden>
         <label for="theme">Theme</label>
+        </p>
       </td><td>
+        <p hidden>
         <select id="theme" size="1">
-          
+        </p>
         </select>
       </td>
     </tr>
-    <tr>
-      <td>
-        <label for="fontsize">Font Size</label>
-      </td><td>
-        <select id="fontsize" size="1">
-          <option value="10px">10px</option>
-          <option value="11px">11px</option>
-          <option value="12px" selected="selected">12px</option>
-          <option value="13px">13px</option>
-          <option value="14px">14px</option>
-          <option value="16px">16px</option>
-          <option value="18px">18px</option>
-          <option value="20px">20px</option>
-          <option value="24px">24px</option>
-        </select>
-      </td>
-    </tr>
+
   
-    <tr>
-      <td >
-        <label for="keybinding">Key Binding</label>
-      </td><td>
-        <select id="keybinding" size="1">
-          <option value="ace">Ace</option>
-          <option value="vim">Vim</option>
-          <option value="emacs">Emacs</option>
-          <option value="custom">Custom</option>
-        </select>
-      </td>
-    </tr>
+    
     <tr>
       <td colspan="4">
         <input id="command" name="command" type="text">  <br>
-        <input type="button" value="echo" onclick="echoTerminal();" >
+        <a href="#" class="action-button shadow animate blue" onclick="echoTerminal();">compile</a>
       </td>
     </tr>
       <tr>
       <td colspan="4">
-        <input type="button" value="saveFile" onclick="saveFile();">
+        <a href="#" class="action-button shadow animate red" onclick="saveFile();">save</a>
       </td>
     </tr>
  <tr>
       <td colspan="4">
         <input id="filepath" name="filepath" type="text">  <br>
-        <input type="button" value="saveTo" onclick="saveTo();" >
+        <a href="#" class="action-button shadow animate green" onclick="saveTo();">saveTo</a>
       </td>
     </tr>
 
-   
-     <tr>
-      <td >
-
-    <div id="status"></div>
-          </td>
-    </tr>
+  <div id="status"></div>
     </table>
     
   
   </div>
+   
   </div>
 </div>
+
+
   <div id="editor-container"></div>
 
 
@@ -168,7 +166,7 @@ function saveTo(){
     // Create our XMLHttpRequest object
     var hr = new XMLHttpRequest();
     // Create some variables we need to send to our PHP file
-    var url = "saveTo.php";
+    var url = "saveTo.php"; 
     var fn = document.getElementById("filepath").value;
     var ln = env.editor.getSession().getValue();
     var vars = "path="+fn+"&contents="+ln;
