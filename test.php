@@ -17,11 +17,18 @@
     <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
 </head>
 <body>
+    <?php
+      function echoTerminal(){$message=shell_exec('ls -lart');
+      echo message;
+    }
+    ?>  
 <div id="optionsPanel" style="position:absolute;height:100%;width:500px">
-  <a href="http://c9.io" title="Cloud9 IDE | Your code anywhere, anytime">
-    <img id="c9-logo" src="demo/kitchen-sink/logo.png" style="width: 172px;margin: -9px 30px -12px 51px;">
-  </a>
-  <div style="position: absolute; overflow: hidden; top:100px; bottom:0">
+
+         <input type="file" id="fileinput" /> <br>
+         <input type="file" id="uploadfiles" multiple="multiple" />
+
+ 
+  <div style="position: absolute; overflow: hidden; top:50px; bottom:0">
   <div style="width: 120%; height:100%; overflow-y: scroll">
 
   <table id="controls">
@@ -53,6 +60,15 @@
       </td>
     </tr>
     <tr>
+      <td >
+        <label for="theme">Theme</label>
+      </td><td>
+        <select id="theme" size="1">
+          
+        </select>
+      </td>
+    </tr>
+    <tr>
       <td>
         <label for="fontsize">Font Size</label>
       </td><td>
@@ -69,6 +85,7 @@
         </select>
       </td>
     </tr>
+  
     <tr>
       <td >
         <label for="keybinding">Key Binding</label>
@@ -81,19 +98,35 @@
         </select>
       </td>
     </tr>
+    <tr>
+      <td colspan="4">
+        <input type="button" value="Run the program" onclick="getResult()">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4">
+        <input type="button" value="echo" onclick="echoTerminal()">
+      </td>
+    </tr>
+      <tr>
+      <td colspan="4">
+       
 
+        <input type="button" value="saveFile" onclick="echoTerminal()">
+      </td>
+    </tr>
 
+   
+     <tr>
+      <td >
+    <p id="result"></p>
 
-  </table>
-  </td></tr>
-  </table>
+    <p id="echo"></p>
+          </td>
+    </tr>
+    </table>
+    
   
-  <a href="http://ace.c9.io">
-    <img id="ace-logo" src="demo/kitchen-sink/ace-logo.png" style="width: 134px;margin: 46px 0px 4px 66px;">
-  </a>
-  <div><a target="_test" href="./lib/ace/test/tests.html"
-    style="color: whitesmoke; text-align: left; padding: 1em;">tests</a>
-  </div>
   </div>
   </div>
 </div>
@@ -108,8 +141,62 @@
   <script src="demo/kitchen-sink/demo.js"></script>
   <script type="text/javascript" charset="utf-8">
     require("kitchen-sink/demo");
+    document.getElementById('fileinput').addEventListener('change', function(){
+    var file = this.files[0];
+    // This code is only for demo ...
+     console.log("name : " + file.name);
+
+    console.log("size : " + file.size);
+
+    console.log("type : " + file.type);
+
+    console.log("date : " + file.lastModified);
+
+}, false);
+
+    function uploadFile(file){
+    var url = 'ec2-52-88-209-108.us-west-2.compute.amazonaws.com/ace-builds/index.php';
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData();
+    xhr.open("POST", url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Every thing ok, file uploaded
+            console.log(xhr.responseText); // handle response.
+        }
+    };
+    fd.append("upload_file", file);
+    xhr.send(fd);
+}
+
+    var uploadfiles = document.querySelector('#uploadfiles');
+uploadfiles.addEventListener('change', function () {
+    var files = this.files;
+    for(var i=0; i<files.length; i++){
+        uploadFile(this.files[i]); // call the function to upload the file
+    }
+}, false);
+
+    saveFile = function() {
+    var contents = env.editor.getSession().getValue();
+  /*  $.post("write.php", 
+            {contents: contents },
+            function() {
+                    // add error checking
+                    alert('successful save');
+            }
+    ); */
+
+};
+
+
+
+    function getResult(){
+       document.getElementById("result").innerHTML = "Hello World\n" ;
+}
   </script>
-    
+
 
 </body>
 </html>
+
