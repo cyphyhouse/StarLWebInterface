@@ -1,0 +1,42 @@
+
+Agent::Foramtion
+int pid = getId(); 
+loc: enum{init, calc, wait} = init;
+int counter = 0;
+ItemPosition target;
+sharedsw pos[pid]: ItemPosition;
+
+initialize()
+{
+	pre (loc == init)
+	eff {
+		pos[pid] = getPos(); 
+		loc = calc;
+	}
+}	
+update()
+{
+	pre (loc == calc || activeFlag)
+	eff 
+	{
+		target = bisector(pos,pid,len);
+		doReachAvoid(target,getObstacles());
+		counter = 0; 
+		loc = wait;
+	}
+}
+wait()
+{
+	pre (loc == wait && counter <= 5)
+	eff 
+	{
+		pos[pid] = getPos();
+		counter++;
+		if (counter > 5) 
+		{
+			loc = calc;
+		}
+	}
+}
+ 
+

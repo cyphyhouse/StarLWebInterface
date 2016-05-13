@@ -1,5 +1,29 @@
-function foo(items, nada) {
-    for (var i=0; i<items.length; i++) {
-        alert(items[i] + "juhu\n");
-    }	// Real Tab.
+Agent::Race
+ItemPositon target[];
+int currentIndex;
+ 
+Init()
+{
+	pre (loc == init)
+	eff 
+	{
+	    target = getInput(); 
+	    currentIndex = 0; 
+	    loc = pick;
+	}
+}
+update()
+{
+	pre (currentIndex < targets.size() && (loc == pick||!active||failed) )
+	eff {
+	    doReachAvoid(target[currentIndex],getObstacles()); 
+	    loc = wait; 
+	}
+}
+wait()
+{
+	pre (loc == wait && done)		 
+	eff {
+	    currentIndex ++; loc = pick;
+	}
 }

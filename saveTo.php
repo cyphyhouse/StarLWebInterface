@@ -1,5 +1,7 @@
 
        <?php
+//check path does not contain any '/'
+// attach 'tmpfile/' to the filename
          if($_POST['path']) 
         {
         $file = $_POST['path'];
@@ -10,6 +12,6 @@
         // Write the contents back to the file
         file_put_contents($file, $current);
        
-        echo Savedto;
+        echo $file;
         }
         ?> 

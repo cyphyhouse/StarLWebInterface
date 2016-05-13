@@ -10,8 +10,7 @@
     <script async="true" src="https://use.edgefonts.net/source-code-pro.js"></script>
 
     <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
-  <link href='https://fonts.googleapis.com/css?family=Orbitron|Exo' rel='stylesheet' type ='text/css'> 
- <style>
+    <style>
     body {background-color:lightblue}
     h1 { 
         color: white;
@@ -32,22 +31,22 @@
 <body>
 <h1>StarL onLine</h1>
 
-<div id="optionsPanel" style="position:absolute;height:100%;width:600px">
+<div id="optionsPanel" style="position:absolute;height:100%;width:500px">
  
   <div style="position: absolute; overflow: hidden; top:10px; bottom:0">
-  <div style="width: 600px; height:100%; overflow-y: scroll ">
+  <div style="width: 500px; height:100%; overflow-y: scroll ">
 
   <table id="controls">
     <tr>
       <td>
-        <p hidden>
+      <p hidden>
         <label for="doc">Document</label>
-        </p>
+       </p>
       </td><td>
-        <p hidden>
+      <p hidden>
         <select id="doc" size="1">
         </select>
-        </p>
+       </p>
       </td>
     </tr>
     <tr>
@@ -58,8 +57,9 @@
       </td><td>
         <p hidden>
         <select id="mode" size="1">
-        </p>
         </select>
+        </p>
+      </td><td>
       </td>
     </tr>
     
@@ -79,28 +79,55 @@
   
     
     <tr>
-      <td colspan="4">
-        <input id="command" name="command" type="text">  <br>
-        <a href="#" class="action-button shadow animate blue" onclick="echoTerminal();">Compile</a>
+      <td colspan="2" line-height= 20px width = 500px>
+        AppName: <input id="appName" name="appName" type="text"><br>  
+        <a href="#" class="action-button" onclick="saveFile();">Load</a> 
+        <a href="#" class="action-button shadow animate blue" onclick="prepareCompile();">Run</a><br>
+      <td colspan="2">
+      <div id="status"></div>
       </td>
     </tr>
-      <tr>
-      <td colspan="4">
-        <a href="#" class="action-button shadow animate red" onclick="saveFile();">Save</a>
-      </td>
-    </tr>
- <tr>
-      <td colspan="4">
-        <input id="filepath" name="filepath" type="text">  <br>
-        <a href="#" class="action-button shadow animate green" onclick="saveTo();">SaveTo</a>
-      </td>
+    <tr>
+    <td>
+Number of robots : <input  id="robotNum" name="robotNum" type="number" min="1">  <br>
+Plotting mode:
+<form>
+<input type="radio" name = "mode" value = "Single" checked>Single robot&nbsp;&nbsp;
+<input type="radio" name = "mode" value = "Multiple" >Multiple robots&nbsp;&nbsp;
+</form>
+Variables for x axis:
+<form>
+<input type="radio" name = "xAxis" value = "time" checked>t &nbsp;&nbsp;
+<input type="radio" name = "xAxis" value = "x" >x &nbsp;&nbsp;
+<input type="radio" name = "xAxis" value = "y" >y&nbsp;&nbsp;
+</form>
+Variables for y axis:
+<form>
+<input type="checkbox" name = "xAxis" value = "time" checked>t &nbsp;&nbsp;
+<input type="checkbox" name = "xAxis" value = "x" >x &nbsp;&nbsp;
+<input type="checkbox" name = "xAxis" value = "y" >y&nbsp;&nbsp;
+</form>
+
+        <a href="#" class="action-button shadow animate blue" onclick="updateImage();">Image</a>
+    </td>
     </tr>
 
-  <div id="status"></div>
+
+    <tr>
+    <td>
+    <img id="myImage" src="demo/kitchen-sink/ace-logo.png" style="width: 134px;margin: 46px 0px 4px 66px;">
+    </td>
+    </tr>
+
+
+
+
+
     </table>
     
   
   </div>
+
    
   </div>
 </div>
@@ -117,7 +144,15 @@
   <script src="demo/kitchen-sink/demo.js"></script>
   <script type="text/javascript" charset="utf-8">
     require("kitchen-sink/demo");
+	editor.getSession().setMode("../ace/lib/ace/mode/python");
+function prepareCompile(){
+ var fn = document.getElementById("appName").value; //appName
+ var filepath ="";
+ saveTo(fn);
+// save to current folder for now.
+ echoTerminal("ls"); // change command here
 
+}
 
 function saveFile(){
     // Create our XMLHttpRequest object
@@ -141,12 +176,12 @@ function saveFile(){
     document.getElementById("status").innerHTML = "processing...";
 }
 
-function echoTerminal(){
+function echoTerminal(fn){
     // Create our XMLHttpRequest object
     var hr = new XMLHttpRequest();
     // Create some variables we need to send to our PHP file
     var url = "echo.php";
-    var fn = document.getElementById("command").value;;
+   // var fn = document.getElementById("command").value;;
     var vars = "action="+fn;
     hr.open("POST", url, true);
     // Set content type header information for sending url encoded variables in the request
@@ -155,7 +190,7 @@ function echoTerminal(){
     hr.onreadystatechange = function() {
 	    if(hr.readyState == 4 && hr.status == 200) {
 		    var return_data = hr.responseText;
-			document.getElementById("status").innerHTML = return_data;
+			document.getElementById("status").innerHTML = "Success!";
 	    }
     }
     // Send the data to PHP now... and wait for response to update the status div
@@ -163,12 +198,12 @@ function echoTerminal(){
     document.getElementById("status").innerHTML = "processing...";
 } 
 
-function saveTo(){
+function saveTo(fn){
     // Create our XMLHttpRequest object
     var hr = new XMLHttpRequest();
     // Create some variables we need to send to our PHP file
     var url = "saveTo.php"; 
-    var fn = document.getElementById("filepath").value;
+  //  var fn = document.getElementById("filepath").value;
     var ln = env.editor.getSession().getValue();
     var vars = "path="+fn+"&contents="+ln;
     hr.open("POST", url, true);
@@ -186,9 +221,13 @@ function saveTo(){
     document.getElementById("status").innerHTML = "processing...";
 } 
 
+function updateImage(){
+    var image = document.getElementById('myImage');
+    image.src ="demo/kitchen-sink/logo.png";
+}
+
   </script>
 
 
 </body>
 </html>
-

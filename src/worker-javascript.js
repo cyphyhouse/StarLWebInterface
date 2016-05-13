@@ -373,7 +373,7 @@ var Range = function(startRow, startColumn, endRow, endColumn) {
         if (!this.isMultiLine()) {
             if (row === this.start.row) {
                 return column < this.start.column ? -1 : (column > this.end.column ? 1 : 0);
-            };
+            }
         }
 
         if (row < this.start.row)
@@ -1056,7 +1056,7 @@ var Document = function(textOrLines) {
         }
     };
     this.replace = function(range, text) {
-        if (!range instanceof Range)
+        if (!(range instanceof Range))
             range = Range.fromPoints(range.start, range.end);
         if (text.length === 0 && range.isEmpty())
             return range.start;
@@ -11775,7 +11775,7 @@ oop.inherits(JavaScriptWorker, Mirror);
 
         var errors = [];
         var maxErrorLevel = this.isValidJS(value) ? "warning" : "error";
-        lint(value, this.options);
+        lint(value, this.options, this.options.globals);
         var results = lint.errors;
 
         var errorAdded = false

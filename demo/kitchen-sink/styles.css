@@ -5,9 +5,9 @@ html {
 }
 
 body {
-    overflow: hidden;
+    overflow: scroll;
     margin: 0;
-    padding: 10px;
+    padding: 0;
     height: 100%;
     width: 100%;
     font-family: Arial, Helvetica, sans-serif, Tahoma, Verdana, sans-serif;
@@ -24,18 +24,19 @@ body {
 #editor-container {
     position: absolute;
     top:  0px;
-    left: 600px;
+    left: 500px;
     bottom: 0px;
     right: 0px;
     background: white;
 }
 
 #controls {
+    overflow: scroll;
     padding: 5px;
 }
 
 #controls td {
-    text-align: right;
+    text-align: left;
 }
 
 #controls td + td {
@@ -47,63 +48,48 @@ body {
     right: 0;
     border-left: 1px solid;
 }
-
-.animate
-{
-	transition: all 0.1s;
-	-webkit-transition: all 0.1s;
+.button {
+  border-radius: 4px;
+  background-color: #66b3ff;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 12px;
+  padding: 8px;
+  width: 55px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
 }
 
-.action-button
-{
-	position: relative;
-	padding: 5px 20px;
-    margin: 0px 5px 5px 0px;
-    float: right;
-	border-radius: 5px;
-	font-family: 'Pacifico', cursive;
-	font-size: 13px;
-	color: #FFF;
-	text-decoration: none;	
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
 }
 
-.blue
-{
-	background-color: #3498DB;
-	border-bottom: 5px solid #2980B9;
-	text-shadow: 0px -2px #2980B9;
+.button span:after {
+  content: '»';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
 }
 
-.red
-{
-	background-color: #E74C3C;
-	border-bottom: 5px solid #BD3E31;
-	text-shadow: 0px -2px #BD3E31;
+.button:hover span {
+  padding-right: 10px;
 }
 
-.green
-{
-	background-color: #82BF56;
-	border-bottom: 5px solid #669644;
-	text-shadow: 0px -2px #669644;
+.button:hover span:after {
+  opacity: 1;
+  right: 0;
 }
-
-.yellow
-{
-	background-color: #F2CF66;
-	border-bottom: 5px solid #D1B358;
-	text-shadow: 0px -2px #D1B358;
-}
-
-.action-button:active
-{
-	transform: translate(0px,5px);
-  -webkit-transform: translate(0px,5px);
-	border-bottom: 1px solid;
-}
-
 /* .ace_text-input {
     z-index: 10!important;
     opacity: 1!important;
     background: rgb(84, 0, 255)!important;
+    color: rgb(255, 255, 255)!important;
+    width: 10em!important;
 }*/
