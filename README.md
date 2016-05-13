@@ -1,21 +1,26 @@
-Ace (Ajax.org Cloud9 Editor)
+StarL web interface
 ============================
 
-Ace is a code editor written in JavaScript.
+StarL is a Java-based coding platform for distributed robotic applications.
+StarL web interface is a simple interface that can provide access to StarL platform to those who are not familiar with Java.
 
-This repository has only generated files.
-If you want to work on ace please go to https://github.com/ajaxorg/ace instead.
+StarL web interface requires no installation. Visit http://ec2-52-88-209-108.us-west-2.compute.amazonaws.com/ace-builds/starl_t.html for current version of StarL web interface.
+
+- Load:
+    1. Fill out the application name 
+    2. Click "Load" button
+
+- Run:
+    1. Fill out the application name
+    2. Fill out the other settings
+    3. Click "Run" button
+    
+- Plot:
+    1. Select the robotID for plotting
+    2. Choose one plotting mode
+    3. Click "Plot" button
 
 
-here you can find pre-built files for convenience of embedding.
-it contains 4 versions
- * [src](https://github.com/ajaxorg/ace-builds/tree/master/src)              concatenated but not minified
- * [src-min](https://github.com/ajaxorg/ace-builds/tree/master/src-min)      concatenated and minified with uglify.js
- * [src-noconflict](https://github.com/ajaxorg/ace-builds/tree/master/src-noconflict)      uses ace.require instead of require
- * [src-min-noconflict](https://github.com/ajaxorg/ace-builds/tree/master/src-min-noconflict)      -
-
-
-For a simple way of embedding ace into webpage see [editor.html](https://github.com/ajaxorg/ace-builds/blob/master/editor.html) or list of other [simple examples](https://github.com/ajaxorg/ace-builds/tree/master/demo)
-To see ace in action go to [kitchen-sink-demo](http://ajaxorg.github.com/ace-builds/kitchen-sink.html), [scrollable-page-demo](http://ajaxorg.github.com/ace-builds/demo/scrollable-page.html) or [minimal demo](http://ajaxorg.github.com/ace-builds/editor.html),
+05/13/2016
 
 
