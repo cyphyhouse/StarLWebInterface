@@ -1,4 +1,5 @@
-Agent::Race
+
+       Agent::Race
 ItemPositon target[];
 int currentIndex;
  
@@ -14,4 +15,17 @@ Init()
 }
 update()
 {
-	pre (currentIndex < targets.size() 
+	pre (currentIndex < targets.size() && (loc == pick||!active||failed) )
+	eff {
+	    doReachAvoid(target[currentIndex],getObstacles()); 
+	    loc = wait; 
+	}
+}
+wait()
+{
+	pre (loc == wait && done)		 
+	eff {
+	    currentIndex ++; loc = pick;
+	}
+}
+ 

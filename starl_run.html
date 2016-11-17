@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>StarL online editor</title>
+    <meta name="author" content="Fabian Jakobs">
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <link rel="stylesheet" href="demo/kitchen-sink/styles.css" type="text/css" media="screen" charset="utf-8">
+    <script async="true" src="https://use.edgefonts.net/source-code-pro.js"></script>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Orbitron" />
+    <link href="./doc/site/images/favicon.ico" rel="icon" type="image/x-icon">
+    <style>
+    body {background-color:lightblue}
+    h1 { 
+        color: white;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 100;
+        padding: 20px; 
+    }
+    h2 { 
+        color: black;
+        font-family:  'Josefin Sans', sans-serif;
+        font-weight: 300;
+        padding: 15px; 
+    }
+    h3 { 
+        font-family: 'Exo', sans-serif;
+        padding: 15px; 
+        font-weight: 300; 
+    }
+    </style>
+</head>
+<body>
+<h1>StarL onLine</h1>
+
+<div id="optionsPanel" style=" overflow: scroll; height:100%; width:500px">
+ 
+
+  <table id="controls">
+    <tr>
+      <td>
+      <p hidden>
+        <label for="doc">Document</label>
+       </p>
+      </td><td>
+      <p hidden>
+        <select id="doc" size="1">
+        </select>
+       </p>
+      </td>
+    </tr>
+    <tr>
+      <td >
+        <p hidden>
+        <label for="mode">Mode</label>
+        </p>
+      </td><td>
+        <p hidden>
+        <select id="mode" size="1">
+        </select>
+        </p>
+      </td><td>
+      </td>
+    </tr>
+    
+    <tr>
+      <td >
+        <p hidden>
+        <label for="theme">Theme</label>
+        </p>
+      </td><td>
+        <p hidden>
+        <select id="theme" size="1">
+        </p>
+        </select>
+      </td>
+    </tr>
+
+  
+    
+    <tr>
+      <td colspan="1" line-height= 20px width = 500px border-spacing: 10px 5px;>
+        AppName: <input id="appName" name="appName" type="text"><br>  
+<br>
+Number of robots : <input  id="robotNum" name="robotNum" type="number" min="1">  <br>
+<br>
+Number of quadcopter : <input  id="quadNum" type="number" min="0">  <br>
+<br>
+Waypoint file : <input  id="main3" name="way_file" type="text">  <br><br>
+Obstacles file : <input  id="main4" name="obs_file" type="text">  <br><br>
+Initial positions file : <input  id="main5" name="int_file" type="text">  <br><br>
+Message mean delay : <input  id="main6" value="15"  name="mean_delay" type="number" min="0">  <br><br>
+Message std delay : <input  id="main7" value="5" name="std_delay" type="number" min="0">  <br><br>
+Message loss per hundred : <input  id="main8" value = "0" name="loss_percent" type="number" min="0" max="100">  <br><br>
+Simulation time out : <input  id="main9" value = "1000" name="time_out" type="number" min="0" max="10000">  <br><br>
+        <button  class="button" onclick="loadFrom();"><span>Load</span></button> 
+        <button  class="button" onclick="prepareCompile();"><span>Run</span></button>
+      <td colspan="1">
+      <div id="status"></div>
+      </td>
+    </tr>
+    <tr>
+    <td>
+Id for the robot:
+<form>
+<input type="checkbox" name = "xAxis" id = "id1" checked>1 &nbsp;&nbsp;
+<input type="checkbox" name = "xAxis" id = "id2" >2 &nbsp;&nbsp;
+<input type="checkbox" name = "xAxis" id = "id3" >3&nbsp;&nbsp;
+</form>
+Plotting mode:
+<form>
+<input type="radio" name = "xAxis" id = "mode1" checked>x vs t &nbsp;&nbsp;
+<input type="radio" name = "xAxis" id = "mode2" >y vs t &nbsp;&nbsp;
+<input type="radio" name = "xAxis" id = "mode3" >y vs x &nbsp;&nbsp;
+</form>
+        <button class="button" onclick="updateImage();"><span>Plot</span></button>
+    </td>
+    </tr>
+
+
+    <tr>
+    <td>
+    </td>
+    </tr>
+
+
+
+
+
+    </table>
+    
+  
+    <img   id="myImage" src="x.png" align="middle" style="align: middle; width: 450px;margin: 0px 8px 8px 18px;">
+  </div>
+
+   
+
+
+  <div id="editor-container"></div>
+
+
+
+
+  <script src="src/ace.js" data-ace-base="src" type="text/javascript" charset="utf-8"></script>
+  <script src="src/keybinding-vim.js"></script>
+  <script src="src/keybinding-emacs.js"></script>
+  <script src="demo.js"></script>
+  <script type="text/javascript" charset="utf-8">
+  require("kitchen-sink/demo");
+  editor.getSession().setMode("../ace/lib/ace/mode/python");
+
+function prepareCompile(){
+ var fn = document.getElementById("appName").value; //appName
+ var filepath ="~/"+fn;
+ saveTo(fn);
+// save to current folder for now.
+var string1 = document.getElementById("robotNum").value; 
+var string2 = document.getElementById("quadNum").value; 
+var string3 = document.getElementById("main3").value; 
+var string4 = document.getElementById("main4").value; 
+var string5 = document.getElementById("main5").value; 
+var string6 = document.getElementById("main6").value; 
+var string7 = document.getElementById("main7").value; 
+var string8 = document.getElementById("main8").value; 
+var string9 = document.getElementById("main9").value;
+var msg = "python generating.py "+string1+" "+string2+" "+string3+" "+string4+" "+string5+" "+string6+" "+string7+" "+string8+" "+string9;
+echoTerminal(msg);
+console.log(msg);
+
+ echoTerminal("python readFile.py "+fn +" " + document.getElementById("robotNum").value); // change command here
+
+}
+
+function saveFile(){
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "my_parse_file.php";
+    var fn = env.editor.getSession().getValue();
+    var vars = "contents="+ encodeURIComponent(fn);
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+      if(hr.readyState == 4 && hr.status == 200) {
+        var return_data = hr.responseText;
+      document.getElementById("status").innerHTML = return_data;
+      }
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(vars); // Actually execute the request
+    document.getElementById("status").innerHTML = "processing...";
+}
+
+function echoTerminal(fn){
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "echo.php";
+   // var fn = document.getElementById("command").value;;
+    var vars = "action="+fn;
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+      if(hr.readyState == 4 && hr.status == 200) {
+        var return_data = hr.responseText;
+      document.getElementById("status").innerHTML = return_data;
+      console.log(return_data);
+	}
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(vars); // Actually execute the request
+    document.getElementById("status").innerHTML = "processing...";
+}
+ 
+function saveTo(fn){
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "saveTo.php"; 
+  //  var fn = document.getElementById("filepath").value;
+    var ln = env.editor.getSession().getValue();
+    var vars = "path="+fn+"&contents="+ encodeURIComponent(ln);
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+      if(hr.readyState == 4 && hr.status == 200) {
+        var return_data = hr.responseText;
+      document.getElementById("status").innerHTML = return_data;
+      }
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(vars); // Actually execute the request
+    document.getElementById("status").innerHTML = "processing...";
+} 
+
+
+
+function loadFrom(){
+ var fn = document.getElementById("appName").value; //appName
+    // Create our XMLHttpRequest object
+    var hr = new XMLHttpRequest();
+    // Create some variables we need to send to our PHP file
+    var url = "loadFrom.php"; 
+  //  var fn = document.getElementById("filepath").value;
+    var ln = env.editor.getSession().getValue();
+    var vars = "path="+fn+"&contents="+ln;
+    hr.open("POST", url, true);
+    // Set content type header information for sending url encoded variables in the request
+    hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    // Access the onreadystatechange event for the XMLHttpRequest object
+    hr.onreadystatechange = function() {
+      if(hr.readyState == 4 && hr.status == 200) {
+        var return_data = hr.responseText;
+            editor.session.doc.setValue(return_data);
+    }
+    }
+    // Send the data to PHP now... and wait for response to update the status div
+    hr.send(vars); // Actually execute the request
+} 
+
+function updateImage(){
+    console.log("updating image...");
+    var id = 0;
+    var mode = 0;
+    var num = 0;
+    if(document.getElementById('id1').checked)
+    {  id+=1;
+	num++;
+    } 
+    if(document.getElementById('id2').checked)
+    {  id+=2;
+	num++;
+    }
+    if(document.getElementById('id3').checked)
+    {  id+=4;
+	num++;
+    }
+    if(document.getElementById('mode1').checked)
+      mode=1; 
+    if(document.getElementById('mode2').checked)
+      mode=2;
+    if(document.getElementById('mode3').checked)
+      mode=3;
+    var file = document.getElementById('appName').value;
+    var commands = "python plotting.py "+file+" "+num+" "+id+" "+mode;
+    console.log(commands);
+    echoTerminal(commands);
+    var image = document.getElementById('myImage'); 
+    console.log("image");
+    image.src ="output.png";
+ //   refreshIt(image);
+sleep(100).then(() => {
+    	image.src = "output.png";
+	var element = image;
+	// Do something after the sleep!
+        element.src = element.src.split('?')[0] + '?' + new Date().getTime();
+})
+}
+
+function refreshIt(element) {
+                setTimeout(function() {
+                    element.src = element.src.split('?')[0] + '?' + new Date().getTime();
+                    refreshIt(element);
+                }, 50); // refresh every 50ms
+            }
+
+function sleep (time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
+
+  </script>
+
+
+</body>
+</html>
+
+
